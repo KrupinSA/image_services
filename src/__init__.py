@@ -6,8 +6,9 @@ def create_app(test_config=None):
 
     app = Flask(__name__, instance_relative_config=True )
     app.config.from_mapping(
-        DATABASE=os.path.join(os.path.dirname(__file__), 'resources', 'db', 'src.sqlite'),
-        IMAGE_DIR = os.path.join(os.path.dirname(__file__), 'resources', 'images')
+        DATABASE = os.path.join(os.path.dirname(__file__), 'resources', 'db', 'src.sqlite'),
+        IMAGE_DIR = os.path.join(os.path.dirname(__file__), 'resources', 'images'),
+        CONTENT_TYPE = ['image/jpeg',]
     )
 
     

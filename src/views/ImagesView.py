@@ -1,9 +1,17 @@
 from flask_restful import Resource, url_for, reqparse
+from flask import current_app
 import sqlite3 
+import werkzeug
+import datetime
+import os
 from .. import main
 
 parser = reqparse.RequestParser()
-parser.add_argument('file')
+parser.add_argument('file',
+                    type=werkzeug.datastructures.FileStorage,
+                    location='files',
+                    required=True,
+                    )
 parser.add_argument('text')
 
 class ItemImage(Resource):
@@ -81,10 +89,31 @@ class ImagesList(Resource):
         POST /api/v1.0/images
         '''
         args = parser.parse_args()
-        return {'img': 'Add new image',
-                'data': args['file'],
-                'url': url_for('bp.imageslist'),
-                }
+        img = args['file']
+        if not img.content_type in current_app.config['CONTENT_TYPE']:
+            return {'message': 'Unauthorized type'}, 400
+        db = main.db.get_db()
+        checked_name = db.execute('SELECT name FROM image WHERE name=?',
+                              (img.filename,)).fetchone()
+        if checked_name: 
+            return {'message': 'picture name already exists'}, 400
+        try:
+            saved_path = os.path.join(current_app.config['IMAGE_DIR'], img.filename)
+            img.save(saved_path)
+            date = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+            db.execute('INSERT INTO  image (name, date) VALUES (?, ?)',
+                (img.filename, date))
+            db.commit()
+            current_image= db.execute('SELECT id, name FROM image WHERE name=?',
+                (img.filename,)).fetchone()
+            id, _ = current_image
+            return {'message': 'Image added to collection',
+                    'image_url': url_for('bp.aboutimage', image_id=id),
+                   }
+
+        except sqlite3.Error as error:
+                return {'message': error}, 500
+    
 
 class AboutImage(Resource):
         
