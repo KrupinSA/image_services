@@ -1,7 +1,6 @@
 venv/
 
 .vscode/
-*.jpg
 *.pyc
 src.sqlite
 __pycache__/
