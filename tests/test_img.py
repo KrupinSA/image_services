@@ -1,4 +1,5 @@
 import os
+from werkzeug.datastructures import FileStorage
 
 def test_get_img_collection(client):
     '''
@@ -17,7 +18,7 @@ def test_get_img_collection(client):
 
 def test_get_img_info(client):
     '''
-    Тест информации о картинке.
+    Тест вывода информации о картинке.
     Корректный запрос.
     '''
     rv = client.get('/api/v1.0/images/1')
@@ -28,6 +29,7 @@ def test_get_img_info(client):
 
     '''
     Некорректный запрос.
+    Нет такого id в БД.
     '''
     rv = client.get('/api/v1.0/images/4')
     assert {'message': 'Image not found'} == rv.get_json()
@@ -35,7 +37,7 @@ def test_get_img_info(client):
 
 def test_get_img(client):
     '''
-    Тест загрузить файл картинки.
+    Тест загрузить файл картинки клиенту.
     Корректный запрос.
     '''
     rv = client.get('/api/v1.0/images/1')
@@ -52,6 +54,48 @@ def test_get_img(client):
     assert loaded_image ==  image           
     '''
     Некорректный запрос.
+    Нет такого файла.
     '''
     rv = client.get('/api/v1.0/file/bad_file.jpg')
     assert {'message': 'File not found'} == rv.get_json()
+
+
+def test_upload_img(client):
+    '''
+    Тест на загрузку файла картинки на сервер.
+    Корректный запрос.
+    '''
+    image_path = os.path.join(os.path.dirname(__file__), 'tmp_img', 'cat4.jpg')
+    img_file = FileStorage(
+                   stream=open(image_path, "rb"),
+                   filename="cat4.jpg",
+                   content_type="image/jpeg",
+    )
+  
+    response = client.post('/api/v1.0/images',
+                           content_type='multipart/form-data',
+                           data={'file': img_file,
+                           },
+                          )    
+
+    img_file.close()
+    assert '200' in  response.status           
+
+    '''
+    Некорректный запрос.
+    Такой файл уже существует.
+    '''
+    img_file = FileStorage(
+                   stream=open(image_path, "rb"),
+                   filename="cat4.jpg",
+                   content_type="image/jpeg",
+    )
+  
+    response = client.post('/api/v1.0/images',
+                           content_type='multipart/form-data',
+                           data={'file': img_file,
+                           },
+                          )    
+
+    
+    assert '400' in  response.status
