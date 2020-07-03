@@ -1,12 +1,15 @@
 import os
+from img_app import create_app 
+from img_app.main.db import get_db, init_db
 import tempfile
 
 import pytest
-from src import create_app
-from src.db import get_db, init_db
+
 
 with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
     _data_sql = f.read().decode('utf8')
+
+image_path = os.path.join(os.path.dirname(__file__), 'images')
 
 
 @pytest.fixture
@@ -16,6 +19,7 @@ def app():
     app = create_app({
         'TESTING': True,
         'DATABASE': db_path,
+        'IMAGE_DIR': image_path,
     })
 
     with app.app_context():
