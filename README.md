@@ -31,12 +31,12 @@ $ flask run
 В БД можно записать картинки из временной директории instance/resources/tmp_img/
 ```sh
 $ export FLASK_APP=img_app
-$ flask init-db
+$ flask image-to-db
 ```
 Либо указать путь
 ```sh
 $ export FLASK_APP=img_app
-$ flask init-db -p /home/user/images/
+$ flask image-to-db -p /home/user/images/
 ```
 
 Тестирование.
