@@ -43,17 +43,24 @@ $ flask image-to-db -p /home/user/images/
 ```sh
 $ pytest
 
-================================ test session starts =================================
-platform linux -- Python 3.8.2, pytest-5.4.3, py-1.9.0, pluggy-0.13.1
+======================================== test session starts ========================================
+platform linux -- Python 3.8.2, pytest-5.4.3, py-1.9.0, pluggy-0.13.1 -- /home/serg/devman/srvhub/projects/image_services/venv/bin/python3
+cachedir: .pytest_cache
 rootdir: /home/serg/devman/srvhub/work/projects/image_services
-collected 10 items                                                                   
+collected 12 items                                                                                  
 
-tests/test_comm.py ...                                                         [ 30%]
-tests/test_db.py ..                                                            [ 50%]
-tests/test_factory.py .                                                        [ 60%]
-tests/test_img.py ....                                                         [100%]
-
-================================= 10 passed in 0.61s =================================
+tests/test_comm.py::test_get_collection_comments PASSED                                       [  8%]
+tests/test_comm.py::test_add_new_commen PASSED                                                [ 16%]
+tests/test_comm.py::test_delete_comment PASSED                                                [ 25%]
+tests/test_comm.py::test_change_commen PASSED                                                 [ 33%]
+tests/test_db.py::test_get_close_db PASSED                                                    [ 41%]
+tests/test_db.py::test_init_db_command PASSED                                                 [ 50%]
+tests/test_db.py::test_image_to_db_command PASSED                                             [ 58%]
+tests/test_factory.py::test_config PASSED                                                     [ 66%]
+tests/test_img.py::test_get_img_collection PASSED                                             [ 75%]
+tests/test_img.py::test_get_img_info PASSED                                                   [ 83%]
+tests/test_img.py::test_download_img PASSED                                                   [ 91%]
+tests/test_img.py::test_upload_img PASSED                                                     [100%]
 ```
 Тестированием выполняются следующие проверки:
 1. Передача конфигурации в фабричную функцию.
