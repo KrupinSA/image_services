@@ -1,5 +1,4 @@
 import sqlite3
-
 import pytest
 from img_app.main.db import get_db
 
@@ -25,4 +24,17 @@ def test_init_db_command(runner, monkeypatch):
     monkeypatch.setattr('img_app.main.db.init_db', fake_init_db)
     result = runner.invoke(args=['init-db'])
     assert 'Initialized' in result.output
+    assert Recorder.called
+
+
+def test_image_to_db_command(runner, monkeypatch):
+    class Recorder(object):
+        called = False
+
+    def fake_image_to_db(fake):
+        Recorder.called = True
+
+    monkeypatch.setattr('img_app.main.images.copy_images', fake_image_to_db)
+    result = runner.invoke(args=['image-to-db'])
+    assert 'Making' in result.output
     assert Recorder.called

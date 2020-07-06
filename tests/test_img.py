@@ -35,7 +35,7 @@ def test_get_img_info(client):
     assert {'message': 'Image not found'} == rv.get_json()
 
 
-def test_get_img(client):
+def test_download_img(client):
     '''
     Тест загрузить файл картинки клиенту.
     Корректный запрос.
@@ -97,5 +97,5 @@ def test_upload_img(client):
                            },
                           )    
 
-    
+    img_file.close()
     assert '400' in  response.status
