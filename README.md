@@ -41,7 +41,7 @@ $ flask image-to-db -p /home/user/images/
 
 Тестирование.
 ```sh
-$ pytest
+$ python -m pytest
 
 ======================================== test session starts ========================================
 platform linux -- Python 3.8.2, pytest-5.4.3, py-1.9.0, pluggy-0.13.1 -- /home/serg/devman/srvhub/projects/image_services/venv/bin/python3
